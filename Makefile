@@ -1,9 +1,9 @@
+LIBNAME	    = libdsbmime
 PREFIX	   ?= /usr/local
 MIMEPREFIX  = ${PREFIX}/share
 MANDIR	    = ${PREFIX}/man/man3
 LIBSDIR	    = ${PREFIX}/lib
 INCSDIR	    = ${PREFIX}/include
-LIBNAME	    = libdsbmime
 MANPAGE	    = ${LIBNAME}.3
 TARGET	    = ${LIBNAME}.a
 HEADER	    = dsbmime.h
@@ -23,10 +23,13 @@ ${TARGET}: ${OBJECTS}
 
 ${OBJECTS}: ${SOURCES}
 
-install: ${TARGET}
+${MANPAGE}.gz: ${MANPAGE}
+	gzip -k ${MANPAGE}
+
+install: ${TARGET} ${MANPAGE}.gz
 	${BSD_INSTALL_DATA} ${TARGET} ${DESTDIR}${LIBSDIR}
 	${BSD_INSTALL_DATA} ${HEADER} ${DESTDIR}${INCSDIR}
-	${BSD_INSTALL_DATA} ${MANPAGE} ${DESTDIR}${MANDIR}
+	${BSD_INSTALL_DATA} ${MANPAGE}.gz ${DESTDIR}${MANDIR}
 
 test: test.c
 	${CC} -o $@ test.c ${TESTCFLAGS}
@@ -37,5 +40,5 @@ readme: readme.mdoc
 	}' | sed '1,1d' > README
 
 clean:
-	-rm -f ${TARGET} ${OBJECTS} test
+	-rm -f ${TARGET} ${OBJECTS} ${MANPAGE}.gz test
 
