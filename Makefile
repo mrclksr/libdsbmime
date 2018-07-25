@@ -39,6 +39,9 @@ readme: readme.mdoc
 		$$_ =~ s/(.)\x08\1/$$1/g; $$_ =~ s/_\x08(.)/$$1/g; print $$_ \
 	}' | sed '1,1d' > README
 
+readmemd: readme.mdoc
+	mandoc -mdoc -Tmarkdown readme.mdoc | sed '1,1d; $$,$$d' > README.md
+
 clean:
 	-rm -f ${TARGET} ${OBJECTS} ${MANPAGE}.gz test
 
